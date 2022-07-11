@@ -86,9 +86,9 @@ if (race1 === "") {
   event.preventDefault()
  console.log("He clickado");
 
-const valueDesc = inputDesc.value;
-const valuePhoto = inputPhoto.value;
-const valueName = inputName.value;
+ const valueDesc = inputDesc.value;
+ const valuePhoto = inputPhoto.value;
+ const valueName = inputName.value;
 
 if (valueDesc === '' || valuePhoto === '' || valueName === '') {
   labelMesageError.innerHTML = "Debe rellenar todos los valores";
@@ -100,21 +100,21 @@ else {
 
 
 
-function handleClick (ev) {
-  ev.preventDefault();
+// function handleClick (ev) {
+//   ev.preventDefault();
 
-  const valueDesc = searchDesc.value;
-  const valueRace = searchRace.value;
+//   const valueDesc = searchDesc.value;
+//   const valueRace = searchRace.value;
 
-  if (valueDesc === '' && valueRace === '') {
-    searchMsgError.innerHTML = "Debe rellenar alguno de los valores";
-  } 
-  else {
-    searchMsgError.innerHTML = "";
-  }
-};
+//   if (valueDesc === '' && valueRace === '') {
+//     searchMsgError.innerHTML = "Debe rellenar alguno de los valores";
+//   } 
+//   else {
+//     searchMsgError.innerHTML = "";
+//   }
+// };
 
-searchBtn.addEventListener ('click', handleClick);
+// searchBtn.addEventListener ('click', handleClick);
 
 
 
@@ -298,81 +298,6 @@ const renderRace = () => {
 }*/
 //FUNCION QUE PINTA LOS GATITOS POR DEFECTO
 
-const kittenDataList = [kittenData_1,kittenData_2,kittenData_3]
-
-
-function renderKitten(kittenData) {
-  return`<li class="card">
-<img
-  class="card_img"
-  src=${kittenData.image}
-  alt="gatito"
-/>
-<h3 class="card_title">${kittenData.name.toUpperCase()}</h3>
-<h4 class="card_race">${kittenData.race}</h4>
-<p class="card_description">
-${kittenData.desc}
-</p>
-</li>`;
-
-}
-
-let html = '';
-
-let index = 0;
-
-html += renderKitten (kittenDataList[index]);
-
-index++;
-html += renderKitten (kittenDataList[index]);
-
-index++;
-html += renderKitten (kittenDataList[index]);
-
-kittenCards.innerHTML = html;
-
-
-//Funcion añadir nuevo gatito con objeto:
-
-const addNewKitten = (event) => {
-
-  event.preventDefault();
-
-
-
-  const newKittenDataObject = {
-    img: inputPhoto.value,
-    name: inputName.value,
-    desc: inputRace.value,
-    race: inputDesc.value,
-  };
-
-  kittenDataList.push(newKittenDataObject);
-
-  renderKitten();
-
-}
-
-formButton.addEventListener('click', addNewKitten);
-
-
-const renderRace = () => {
-  
-  let htmlRace = "";
-  const raceValue2 = inputRace.value;
-  
-  if (raceValue2 === "") {htmlRace="No se ha especificado la raza"}
-  else { htmlRace = raceValue2}
-
-  return htmlRace;
-
-}
-
-
-
-
-
-
 const kittenData_1 = {
   image: 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg',
   name: 'Anastacio',
@@ -395,7 +320,104 @@ const kittenData_3 = {
 };
 
 
+const kittenDataList = [kittenData_1,kittenData_2,kittenData_3]
+
+//Esta función pinta los gatitos.
+
+function renderKitten() {
+ 
+  let html = '';
+  
+  for (const kitten of kittenDataList) {
+    html += `<li class="card">
+    <img
+    class="card_img"
+    src=${kitten.image}
+    alt="gatito"
+    />
+    <h3 class="card_title">${kitten.name.toUpperCase()}</h3>
+    <h4 class="card_race">${kitten.race}</h4>
+   <p class="card_description">
+    ${kitten.desc}
+    </p>
+    </li>`;
+
+  }
+
+  kittenCards.innerHTML = html;
+
+}
+
+renderKitten(kittenDataList);
+
+//Funcion añadir nuevo gatito con objeto que viene desde los imputs:
+
+const addNewKitten = (event) => {
+
+  event.preventDefault();
+
+  const newKittenDataObject = {
+    img: inputPhoto.value,
+    name: inputName.value,
+    desc: inputRace.value,
+    race: inputDesc.value,
+  };
+
+  kittenDataList.push(newKittenDataObject);
+
+  renderKitten(kittenDataList);
+
+}
+
+formButton.addEventListener('click', addNewKitten);
 
 
+// Esta función era para el mensaje de error si no había raza
 
-//TENEMOS QUE ARREGLAR FUNCION RENDERKITTEN PONIENDOLE UN BUCLE PARA QUE AÑADA EL NUEVO GATITO
+/*const renderRace = () => {
+  
+  let htmlRace = "";
+  const raceValue2 = inputRace.value;
+  
+  if (raceValue2 === "") {htmlRace="No se ha especificado la raza"}
+  else { htmlRace = raceValue2}
+
+  return htmlRace;
+
+}*/
+
+
+//const searchDesc = document.querySelector('.js_in_search_desc');
+//const searchRace = document.querySelector ('.js_in_search_race');
+//const searchBtn = document.querySelector ('.js_search_btn');
+
+
+const handleClickSearch = (event) => {
+
+  event.preventDefault();
+
+  const valueDesc = searchDesc.value;
+  const valueRace = searchRace.value;
+
+  // if (valueDesc === '' && valueRace === '') {
+  //   searchMsgError.innerHTML = "Debe rellenar alguno de los valores";
+  // } 
+  // else {
+  //   searchMsgError.innerHTML = "";
+  // }
+
+ const filteredKitten = kittenDataList.filter (
+
+  oneKitten => oneKitten.toLowerCase().includes(valueDesc.toLowerCase())
+
+ );
+
+ console.log(filteredKitten);
+
+}
+
+searchBtn.addEventListener ('click', handleClickSearch);
+
+//Da error, nos dice que la línea 411 no es una función, pedir ayuda profe.
+
+
