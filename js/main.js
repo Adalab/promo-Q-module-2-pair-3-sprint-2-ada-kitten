@@ -49,9 +49,28 @@ const searchMsgError = document.querySelector ('.js-label-search-error');
 const cancelBtn = document.querySelector ('.js-btn-cancel');
 const inputRace = document.querySelector ('.js-input-race');
 
+const GITHUB_USER = 'blancabigeriego';
+const SERVER_URL = `https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`;
+let kittenDataList = [];
 
 
 let race1ToDisplay;
+
+
+fetch(SERVER_URL, {
+  method: 'GET',
+  headers: {'Content-Type': 'application/json'},
+})
+.then(response => response.json())
+.then(json => {
+  console.log(json);
+  kittenDataList = json.results;
+  renderKitten(kittenDataList);
+})
+;
+
+
+
 
 if (race1 === "") {
   race1ToDisplay = `No se ha especificado la raza`;
@@ -320,19 +339,19 @@ const kittenData_3 = {
 };
 
 
-const kittenDataList = [kittenData_1,kittenData_2,kittenData_3]
 
-//Esta función pinta los gatitos.
 
-function renderKitten() {
+//Esta función pinta los gatitos, le pasamos el parametro list para que coja todo lo que le pasemos cuando la llamamos.
+
+function renderKitten(list) {
  
   let html = '';
   
-  for (const kitten of kittenDataList) {
+  for (const kitten of list) {
     html += `<li class="card">
     <img
     class="card_img"
-    src=${kitten.image}
+    src=${kitten.url}
     alt="gatito"
     />
     <h3 class="card_title">${kitten.name.toUpperCase()}</h3>
@@ -396,8 +415,8 @@ const handleClickSearch = (event) => {
 
   event.preventDefault();
 
-  const valueDesc = searchDesc.value;
-  const valueRace = searchRace.value;
+  const valueDesc = searchDesc.value.toLowerCase();
+  const valueRace = searchRace.value.toLowerCase();
 
   // if (valueDesc === '' && valueRace === '') {
   //   searchMsgError.innerHTML = "Debe rellenar alguno de los valores";
@@ -408,13 +427,20 @@ const handleClickSearch = (event) => {
 
  const filteredKitten = kittenDataList.filter (
 
-  oneKitten => oneKitten.toLowerCase().includes(valueDesc.toLowerCase())
+  oneKitten => oneKitten.desc.toLowerCase().includes(valueDesc)
 
- );
+  ).filter(
+    oneKitten => oneKitten.race.toLowerCase().includes(valueRace)
 
+  );
+
+  
+  renderKitten(filteredKitten);
  console.log(filteredKitten);
 
 }
+
+
 
 searchBtn.addEventListener ('click', handleClickSearch);
 
