@@ -51,23 +51,50 @@ const inputRace = document.querySelector ('.js-input-race');
 
 const GITHUB_USER = 'blancabigeriego';
 const SERVER_URL = `https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`;
+
 let kittenDataList = [];
+
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
 
 
 let race1ToDisplay;
 
 
-fetch(SERVER_URL, {
-  method: 'GET',
-  headers: {'Content-Type': 'application/json'},
-})
-.then(response => response.json())
-.then(json => {
-  console.log(json);
-  kittenDataList = json.results;
+// fetch(SERVER_URL, {
+//   method: 'GET',
+//   headers: {'Content-Type': 'application/json'},
+// })
+// .then(response => response.json())
+// .then(json => {
+//   console.log(json);
+//   kittenDataList = json.results;
+//   renderKitten(kittenDataList);
+
+// })
+// ;
+
+if (kittenListStored) {
+
   renderKitten(kittenDataList);
-})
-;
+
+} else {
+ 
+  fetch(SERVER_URL, {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      kittenDataList = json.results;
+      renderKitten(kittenDataList);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+
+
 
 
 
@@ -371,22 +398,48 @@ renderKitten(kittenDataList);
 
 //Funcion añadir nuevo gatito con objeto que viene desde los imputs:
 
+
+
 const addNewKitten = (event) => {
 
   event.preventDefault();
 
-  const newKittenDataObject = {
+   const newKittenDataObject = {
     img: inputPhoto.value,
     name: inputName.value,
     desc: inputRace.value,
     race: inputDesc.value,
-  };
+   };
 
-  kittenDataList.push(newKittenDataObject);
+  // kittenDataList.push(newKittenDataObject);
+
+  fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(newKittenDataObject),
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+
+    if (data.success) {
+
+     // kittenCards.innerHTML = data.;
+      //Completa y/o modifica el código:
+      //Agrega el nuevo gatito al listado
+      //Guarda el listado actualizado en el local stoarge
+      //Visualiza nuevamente el listado de gatitos
+      //Limpia los valores de cada input
+    } else {
+      //muestra un mensaje de error.
+    }
+  });
 
   renderKitten(kittenDataList);
 
 }
+
+
 
 formButton.addEventListener('click', addNewKitten);
 
@@ -444,6 +497,6 @@ const handleClickSearch = (event) => {
 
 searchBtn.addEventListener ('click', handleClickSearch);
 
-//Da error, nos dice que la línea 411 no es una función, pedir ayuda profe.
+
 
 
