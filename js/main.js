@@ -378,7 +378,7 @@ function renderKitten(list) {
     html += `<li class="card">
     <img
     class="card_img"
-    src=${kitten.url}
+    src=${kitten.image}
     alt="gatito"
     />
     <h3 class="card_title">${kitten.name.toUpperCase()}</h3>
@@ -405,13 +405,13 @@ const addNewKitten = (event) => {
   event.preventDefault();
 
    const newKittenDataObject = {
-    img: inputPhoto.value,
+    image: inputPhoto.value,
     name: inputName.value,
     desc: inputRace.value,
     race: inputDesc.value,
    };
 
-  // kittenDataList.push(newKittenDataObject);
+  
 
   fetch(`https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`, {
     method: 'POST',
@@ -424,14 +424,22 @@ const addNewKitten = (event) => {
 
     if (data.success) {
 
-     // kittenCards.innerHTML = data.;
-      //Completa y/o modifica el código:
-      //Agrega el nuevo gatito al listado
-      //Guarda el listado actualizado en el local stoarge
-      //Visualiza nuevamente el listado de gatitos
-      //Limpia los valores de cada input
+      kittenDataList.push(newKittenDataObject);
+      renderKitten(kittenDataList);
+      
+      localStorage.setItem('kittenStoraged', JSON.stringify(data));
+      inputPhoto.value ="";
+      inputName.value ="";
+      inputRace.value ="";
+      inputDesc.value="";
+
+      hideAddKitten();
+    
     } else {
-      //muestra un mensaje de error.
+
+      labelMesageError.innerHTML = "Ha ocurrido un error, inténtelo de nuevo";
+      
+      
     }
   });
 
@@ -500,3 +508,4 @@ searchBtn.addEventListener ('click', handleClickSearch);
 
 
 
+//NOS FUNCIONA EL FETCH PARA AGREGAR NUEVOS GATITOS PERO N NOS FUNCIONAN LOS CAMPOS REQUIRED, TE DEJA CREAR LA TARJETA IGUALMENTE
